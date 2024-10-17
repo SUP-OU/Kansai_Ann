@@ -36,7 +36,7 @@ library(sf)
 # save(cenz.Kansai,file="data/census2015/cenz.Kansai.xdr")
 
 # st_write(cenz.Kansai,dsn="data/shp/cenz.Kansai.2015.shp", layer_options = "ENCODING=cp932")
-load("data/census2015/cenz.Kansai.xdr") # cenz.Kansai
+# load("data/census2015/cenz.Kansai.xdr") # cenz.Kansai
 
 # # simplified Kansai region
 # tstr="D:/大阪大学/教育/2024/ゼミ/スタートアップゼミ/R/data/shp/adm.bnd.prf.Kansai.simpl2.shp"
@@ -54,7 +54,7 @@ adm.bnd.prf.Kansai.simpl2=st_transform(adm.bnd.prf.Kansai.simpl2.wgs84,6668) # J
 # kansai.pbf.highway3=kansai.pbf.highway2[which(tI>0),]
 # # plot(kansai.pbf.highway3$geometry,col="blue")
 # st_write(kansai.pbf.highway3,dsn="data/shp/kansai.pbf.highway3.shp", layer_options = "ENCODING=cp932")
-kansai.pbf.highway3=st_read("data/shp/kansai.pbf.highway3.shp")
+# kansai.pbf.highway3=st_read("data/shp/kansai.pbf.highway3.shp")
 
 
 # UEA urban employment area
@@ -84,7 +84,7 @@ kansai.pbf.highway3=st_read("data/shp/kansai.pbf.highway3.shp")
 # # st_crs(uea.shp01)
 # # st_crs(adm.bnd.prf.Kansai.simpl2)
 # st_write(uea.shp01.kansai,dsn="data/shp/uea.shp01.kansai.shp", layer_options = "ENCODING=cp932")
-uea.shp01.kansai=st_read("data/shp/uea.shp01.kansai.shp")
+# uea.shp01.kansai=st_read("data/shp/uea.shp01.kansai.shp")
 
 # kpt10.tga.sf=st_read(tstr)
 # st_crs(kpt10.tga.sf)=4612
@@ -108,38 +108,38 @@ library(ggspatial)
 # tstr=paste0("E:/WorkDir01/prog/R/2023/2023_KansaiNTL/data/tDNB.msk.",yyv[yy],".xdr")
 # load(tstr) # tDNB.msk
 # save(tDNB.msk,file="data/tDNB.msk.2022.xdr")
-load("data/tDNB.msk.2022.xdr") # tDNB.msk
+# load("data/tDNB.msk.2022.xdr") # tDNB.msk
 
 
-basemap=ggplot(data = adm.bnd.prf.Kansai.simpl2.wgs84) +
-  geom_sf(data=adm.bnd.prf.Kansai.simpl2.wgs84,fill="white",lwd=0.2,color="gray")+
-  annotation_north_arrow(location = "bl", which_north = "true", 
-                         height=unit(3,"cm"),width=unit(3,"cm"),
-                         pad_x = unit(1, "cm"), pad_y = unit(2, "cm"),
-                         style = north_arrow_fancy_orienteering(text_size=24)) +
-  theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))
-
-
-tDNB.msk.df <- tDNB.msk %>% #raster data
-  as.data.frame(xy = TRUE) %>% na.omit()
-names(tDNB.msk.df)[3]="DNB"
-
-bp2=c(10,50,100,200)
-NTL.map <- basemap +
-  geom_sf(fill = NA) +
-  geom_raster(data = tDNB.msk.df, aes(x, y, fill = DNB)) +
-  theme_bw()+
-  theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))+
-  scale_fill_viridis_c(breaks=bp2,labels=bp2,option = "viridis", trans = scales::pseudo_log_trans(sigma=5,base=2),
-                       name=bquote(.("nW")/cm^2/sr),limits=c(0,150),oob = scales::squish)+
-  xlab(NULL) + ylab(NULL)
-
-tstr=paste0("figs/map01/NTL_",yyv[yy],".png")
-ggsave(tstr, plot = NTL.map, width=1000,height=1000,units="px",dpi=72)
-
-
-# writeRaster(tDNB.msk.df, "data/tif/DNB_2022_Kansai", format = "GTiff")
-writeRaster(tDNB.msk,filename="data/tif/DNB_2022_Kansai", format="GTiff", overwrite=TRUE)
+# basemap=ggplot(data = adm.bnd.prf.Kansai.simpl2.wgs84) +
+#   geom_sf(data=adm.bnd.prf.Kansai.simpl2.wgs84,fill="white",lwd=0.2,color="gray")+
+#   annotation_north_arrow(location = "bl", which_north = "true", 
+#                          height=unit(3,"cm"),width=unit(3,"cm"),
+#                          pad_x = unit(1, "cm"), pad_y = unit(2, "cm"),
+#                          style = north_arrow_fancy_orienteering(text_size=24)) +
+#   theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))
+# 
+# 
+# tDNB.msk.df <- tDNB.msk %>% #raster data
+#   as.data.frame(xy = TRUE) %>% na.omit()
+# names(tDNB.msk.df)[3]="DNB"
+# 
+# bp2=c(10,50,100,200)
+# NTL.map <- basemap +
+#   geom_sf(fill = NA) +
+#   geom_raster(data = tDNB.msk.df, aes(x, y, fill = DNB)) +
+#   theme_bw()+
+#   theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))+
+#   scale_fill_viridis_c(breaks=bp2,labels=bp2,option = "viridis", trans = scales::pseudo_log_trans(sigma=5,base=2),
+#                        name=bquote(.("nW")/cm^2/sr),limits=c(0,150),oob = scales::squish)+
+#   xlab(NULL) + ylab(NULL)
+# 
+# tstr=paste0("figs/map01/NTL_",yyv[yy],".png")
+# ggsave(tstr, plot = NTL.map, width=1000,height=1000,units="px",dpi=72)
+# 
+# 
+# # writeRaster(tDNB.msk.df, "data/tif/DNB_2022_Kansai", format = "GTiff")
+# writeRaster(tDNB.msk,filename="data/tif/DNB_2022_Kansai", format="GTiff", overwrite=TRUE)
 
 # adm.bnd.prf.Kansai.simpl2.wgs84
 # tDNB=crop(DNB,adm.bnd.prf.Kansai.simpl2.wgs84)
