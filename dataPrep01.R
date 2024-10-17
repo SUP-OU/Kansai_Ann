@@ -233,7 +233,8 @@ yyv=821+(0:11)*4
 # dates[yyv,]
 
 # area including the target region in the sinusoidal system
-rbb=extent(tTD2) # extent of target (based on time distance)
+# rbb=extent(tTD2) # extent of target (based on time distance)
+rbb=extent(adm.bnd.prf.Kansai.simpl2.wgs84)
 # bounding box sf
 # tbnd=st_bbox(c(xmin=rbb[1],ymin=rbb[3],xmax=rbb[2],ymax=rbb[4]),src=st_crs(4326))
 # tbnd.sf=st_as_sfc(tbnd) %>% st_set_crs(4326) %>% st_sf()
@@ -276,7 +277,6 @@ for(idn in 1:2){ # day / night
   }
 }
 
-# MOD17A3HGF_01L=as.list(rep(NA,nnx))
 system.time({ # 8315.66 sec
   for(iit in 1:length(yyv)){
     for (iix in 1:nnx){
