@@ -480,6 +480,7 @@ for(idn in 1:2){ # NDVI / EVI
   }
 }
 
+
 # Vegetation Indices (NDVI/EVI)
 system.time({ # 8315.66 sec
   for(iit in 1:length(yyv)){
