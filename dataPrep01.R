@@ -459,8 +459,63 @@ for(yyi in 1:length(yyv)){ # yyi=1
 # plot(adm.bnd.prf.Kansai.simpl2$geometry,add=T)
 
 
+#####
+
+
 ###
 # 16      MOD13Q1                    MODIS/Terra Vegetation Indices (NDVI/EVI) 16-Day L3 Global 250m SIN Grid    16 day
+#####
+#clear memory
+rm(list=ls())
+gc();gc();
+
+library(dplyr)
+library(sf)
+
+library(raster)
+library(fasterize)
+library(ggplot2)
+library(ggspatial)
+adm.bnd.prf.Kansai.simpl2.wgs84=st_read("data/shp/adm.bnd.prf.Kansai.simpl2.wgs84.shp")
+adm.bnd.prf.Kansai.simpl2=st_transform(adm.bnd.prf.Kansai.simpl2.wgs84,6668) # JGD2011
+adm.bnd.prf.Kansai.simpl2.mol=st_transform(adm.bnd.prf.Kansai.simpl2,crs="+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs ")
+tm2=adm.bnd.prf.Kansai.simpl2 %>% mutate(flg=1)
+library(MODISTools)
+pds=mt_products() # check product list
+txy=st_bbox(adm.bnd.prf.Kansai.simpl2.wgs84) %>% st_as_sfc %>% st_centroid %>% st_coordinates()
+rbb=extent(adm.bnd.prf.Kansai.simpl2.wgs84)
+# bounding box sf
+# tbnd=st_bbox(c(xmin=rbb[1],ymin=rbb[3],xmax=rbb[2],ymax=rbb[4]),src=st_crs(4326))
+# tbnd.sf=st_as_sfc(tbnd) %>% st_set_crs(4326) %>% st_sf()
+tbnd.sf=st_bbox(adm.bnd.prf.Kansai.simpl2.wgs84) %>% st_as_sfc %>% st_sf()
+tbnd.sf.sn=st_transform(tbnd.sf,crs="+proj=sinu +lon_0=0 +x_0=0 +y_0=0 +R=6371007.181 +units=m +no_defs ")
+# plot(tbnd.sf.sn$geometry)
+# extent of bounding box
+tbsnv.ll=extent(tbnd.sf)
+tbsnv.sn=extent(tbnd.sf.sn)
+# mt_to_raster
+# Modis tool has limit in downloading size
+DD2v=c((tbsnv.sn[2]-tbsnv.sn[1]),(tbsnv.sn[4]-tbsnv.sn[3]))/10^3 #%>% ceiling() # 
+DD2v=ceiling(DD2v) # extent size in km
+
+# the reading segment should be less than 50 km to avoid the data transfer limit
+# divide into segment
+nnx=ceiling(DD2v[1]/50)
+nny=ceiling(DD2v[2]/50)
+
+# segment size (degree)
+ddx=(tbsnv.ll[2]-tbsnv.ll[1])/nnx
+ddy=(tbsnv.ll[4]-tbsnv.ll[3])/nny
+
+# center of each segment (lat-lon)
+xxcv=tbsnv.ll[1]+(ddx/2)*(((1:nnx)*2-1))
+yycv=tbsnv.ll[3]+(ddy/2)*(((1:nny)*2-1))
+
+# segment size (km)
+ddx.sn=ceiling(DD2v[1]/nnx)
+ddy.sn=ceiling(DD2v[2]/nny)
+
+
 bands=mt_bands(product = "MOD13Q1") # 
 dates=mt_dates(product = "MOD13Q1",lat=txy[2],lon=txy[1]) # dates of the data
 yyv0=grep("2018",dates$calendar_date)
@@ -581,5 +636,6 @@ for(yyi in 1:length(yyv)){ # yyi=1
 
 
 #####
+
 
 
