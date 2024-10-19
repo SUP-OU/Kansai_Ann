@@ -522,6 +522,33 @@ yyv0=grep("2018",dates$calendar_date)
 yyv=412+(0:11)*2
 # dates[yyv,]
 
+
+# Vegetation Indices (NDVI/EVI)
+system.time({ # 8315.66 sec
+  for(iit in 1:length(yyv)){
+    for (iix in 1:nnx){
+      for(iiy in 1:nny){ # iix=1;iiy=1;iit=1
+        cat("iit=",iit,"iix=",iix,",iiy=",iiy,"\n")
+        tMOD13Q1=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
+                                                        band="250m_16_days_NDVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
+                                                        km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
+                                                        out_dir="data/modis")
+        tstr=paste0("data/modis/MOD13Q1_NDVI_iit_",iit,"_iix_",iix,"_iiy_",iiy,".xdr")
+        save(tMOD13Q1,file=tstr)
+        
+        tMOD13Q1=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
+                                                        band="250m_16_days_EVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
+                                                        km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
+                                                        out_dir="data/modis")
+        tstr=paste0("data/modis/MOD13Q1_EVI_iit_",iit,"_iix_",iix,"_iiy_",iiy,".xdr")
+        save(tMOD13Q1,file=tstr)
+      }
+    }
+  }
+})
+
+
+
 # "250m_16_days_NDVI"
 # "250m_16_days_EVI"
 MOD13Q1_01L=as.list(rep(NA,2))
