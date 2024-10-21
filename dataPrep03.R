@@ -46,3 +46,8 @@ write.csv(stops.osaka.df,file="data/stops.osaka.df.CP932.csv", fileEncoding = "C
 #clear memory
 rm(list=ls())
 gc();gc();
+
+test01
+
+
+#####
