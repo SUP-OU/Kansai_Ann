@@ -38,3 +38,11 @@ stops.osaka.df= stops.osaka %>% st_drop_geometry()
 write.csv(stops.osaka.df,file="data/stops.osaka.df.csv")
 write.csv(stops.osaka.df,file="data/stops.osaka.df.CP932.csv", fileEncoding = "CP932")
 
+#####
+
+
+# ekisupato stations and bus stops extract
+#####
+#clear memory
+rm(list=ls())
+gc();gc();

@@ -524,7 +524,7 @@ yyv=412+(0:11)*2
 
 
 # Vegetation Indices (NDVI/EVI)
-system.time({ # 8315.66 sec
+system.time({ # 5.486e+04 sec
   for(iit in 1:length(yyv)){
     for (iix in 1:nnx){
       for(iiy in 1:nny){ # iix=1;iiy=1;iit=1
@@ -556,116 +556,143 @@ system.time({ # 8315.66 sec
 
 # "250m_16_days_NDVI"
 # "250m_16_days_EVI"
-MOD13Q1_01L=as.list(rep(NA,2))
-for(idn in 1:2){ # NDVI / EVI
-  MOD13Q1_01L[[idn]]=as.list(rep(NA,length(yyv)))
-  for(iit in 1:length(yyv)){ 
-    MOD13Q1_01L[[idn]][[iit]]=as.list(rep(NA,nnx))
-    for(iix in 1:nnx){
-      MOD13Q1_01L[[idn]][[iit]][[iix]]=as.list(rep(NA,nny))
-    }
-  }
-}
+# MOD13Q1_01L=as.list(rep(NA,2))
+# for(idn in 1:2){ # NDVI / EVI
+#   MOD13Q1_01L[[idn]]=as.list(rep(NA,length(yyv)))
+#   for(iit in 1:length(yyv)){
+#   # for(iit in 1:7){  # middle
+#     MOD13Q1_01L[[idn]][[iit]]=as.list(rep(NA,nnx))
+#     for(iix in 1:nnx){
+#       MOD13Q1_01L[[idn]][[iit]][[iix]]=as.list(rep(NA,nny))
+#     }
+#   }
+# }
 
 
-# Vegetation Indices (NDVI/EVI)
-system.time({ # 8315.66 sec
-  for(iit in 1:length(yyv)){
-    for (iix in 1:nnx){
-      for(iiy in 1:nny){ # iix=7;iiy=1
-        cat("iit=",iit,"iix=",iix,",iiy=",iiy,"\n")
-        MOD13Q1_01L[[1]][[iit]][[iix]][[iiy]]=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
-                                                        band="250m_16_days_NDVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
-                                                        km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
-                                                        out_dir="data/modis")
-        MOD13Q1_01L[[2]][[iit]][[iix]][[iiy]]=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
-                                                        band="250m_16_days_EVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
-                                                        km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
-                                                        out_dir="data/modis")
-      }
-    }
-  }
-})
-
-iit=1; iix=1; iiy=1
-MOD13Q1_01L[[1]][[iit]][[iix]][[iiy]]
-
-
-tstr=paste0("data/MOD11A2_01L_Kansai.xdr")
-save(MOD13Q1_01L,file=tstr)
-load(tstr) # MOD17A3HGF_01L
+# # Vegetation Indices (NDVI/EVI)
+# system.time({ # 8315.66 sec
+#   # for(iit in 1:length(yyv)){
+#   for(iit in 1:7){
+#     for (iix in 1:nnx){
+#       for(iiy in 1:nny){ # iix=7;iiy=1
+#         cat("iit=",iit,"iix=",iix,",iiy=",iiy,"\n")
+#         tstr=paste0("data/modis/MOD13Q1_NDVI_iit_",iit,"_iix_",iix,"_iiy_",iiy,".xdr")
+#         load(tstr) # tMOD13Q1
+#         
+#         MOD13Q1_01L[[1]][[iit]][[iix]][[iiy]]=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
+#                                                         band="250m_16_days_NDVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
+#                                                         km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
+#                                                         out_dir="data/modis")
+#         MOD13Q1_01L[[2]][[iit]][[iix]][[iiy]]=mt_subset(product = "MOD13Q1",lat=yycv[iiy],lon=xxcv[iix],
+#                                                         band="250m_16_days_EVI",start=dates[yyv[iit],2],end=dates[yyv[iit],2],
+#                                                         km_lr=ddx.sn,km_ab=ddy.sn,site_name="Kansai",
+#                                                         out_dir="data/modis")
+#       }
+#     }
+#   }
+# })
+# 
+# iit=1; iix=1; iiy=1
+# MOD13Q1_01L[[1]][[iit]][[iix]][[iiy]]
+# 
+# 
+# tstr=paste0("data/MOD11A2_01L_Kansai.xdr")
+# save(MOD13Q1_01L,file=tstr)
+# load(tstr) # MOD17A3HGF_01L
 
 
 
 # MOD17A3HGF_01L[[iit]][[iix]][[iiy]] %>% head
 
 # convert data to raster: sinusoidal
-system.time({ # 207.24 sec
+system.time({ # 379.65  sec
   tmp0.rs0L=as.list(rep(NA,2))
   for (idn in 1:2){
     tmp0.rs0L[[idn]]=as.list(rep(NA,length(yyv)))
   }
-  for(iit in 1:length(yyv)){
+  # for(iit in 1:length(yyv)){
+  for(iit in 1:7){
     tmp1.rs0L.d=tmp1.rs0L.n=as.list(rep(NA,nnx))
     for (iix in 1:nnx){ # iix=1
       tmp2.rs0L.d=tmp2.rs0L.n=as.list(rep(NA,nny))
       for(iiy in 1:nny){ # iix=iiy=1 
         cat("iit=",iit,"iix=",iix,",iiy=",iiy,"\n")
-        tmp2.rs0L.d[[iiy]]=mt_to_terra(df=MOD13Q1_01L[[1]][[iit]][[iix]][[iiy]],reproject=F) %>% as("Raster")
-        tmp2.rs0L.n[[iiy]]=mt_to_terra(df=MOD13Q1_01L[[2]][[iit]][[iix]][[iiy]],reproject=F) %>% as("Raster")
+        
+        # NDVI
+        tstr=paste0("data/modis/MOD13Q1_NDVI_iit_",iit,"_iix_",iix,"_iiy_",iiy,".xdr")
+        load(tstr) # tMOD13Q1
+        tmp2.rs0L.d[[iiy]]=mt_to_terra(df=tMOD13Q1,reproject=F) %>% as("Raster")
+        
+        # EVI
+        tstr=paste0("data/modis/MOD13Q1_EVI_iit_",iit,"_iix_",iix,"_iiy_",iiy,".xdr")
+        load(tstr) # tMOD13Q1
+        tmp2.rs0L.n[[iiy]]=mt_to_terra(df=tMOD13Q1,reproject=F) %>% as("Raster")
       }
       tmp1.rs0L.d[[iix]]=do.call(merge,tmp2.rs0L.d)
       tmp1.rs0L.n[[iix]]=do.call(merge,tmp2.rs0L.n)
     }
-    tmp0.rs0L[[1]][[iit]]=do.call(merge,tmp1.rs0L.d) # day
-    tmp0.rs0L[[2]][[iit]]=do.call(merge,tmp1.rs0L.n) # night
+    tmp0.rs0L[[1]][[iit]]=do.call(merge,tmp1.rs0L.d) # NDVI
+    tmp0.rs0L[[2]][[iit]]=do.call(merge,tmp1.rs0L.n) # EVI
   }
-  
 })
 
 # reproject to lat-lon
-system.time({
+system.time({ # 18.52 
   MOD13Q1.wgs84.ras.01L=as.list(rep(NA,2))
   for (idn in 1:2){
     MOD13Q1.wgs84.ras.01L[[idn]]=as.list(rep(NA,length(yyv)))
-    for(iit in 1:length(yyv)){
+    # for(iit in 1:length(yyv)){
+    for(iit in 1:7){
       MOD13Q1.wgs84.ras.01L[[idn]][[iit]]=projectRaster(tmp0.rs0L[[idn]][[iit]],method="ngb",crs="+proj=longlat +datum=WGS84 +no_defs ") %>% 
         crop(tbnd.sf) # %>% resample(tTD2,method="ngb")
     }
   }
 })
 
+
+basemap=ggplot(data = adm.bnd.prf.Kansai.simpl2.wgs84) +
+  geom_sf(data=adm.bnd.prf.Kansai.simpl2.wgs84,fill="white",lwd=0.2,color="gray")+
+  annotation_north_arrow(location = "bl", which_north = "true",
+                         height=unit(3,"cm"),width=unit(3,"cm"),
+                         pad_x = unit(1, "cm"), pad_y = unit(2, "cm"),
+                         style = north_arrow_fancy_orienteering(text_size=24)) +
+  theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))
+
+idn=2;iit=1
 MOD13Q1.df <- MOD13Q1.wgs84.ras.01L[[idn]][[iit]] %>% #raster data
   as.data.frame(xy = TRUE) %>% na.omit()
 names(MOD13Q1.df)[3]="VI"
 
-range()
-bp2=c(260,270,280,290,300)
-MOD11A2.map <- basemap +
+# range(MOD13Q1.df$VI)
+bp2=c(-0.3,-0.1,0,0.1,0.3,0.6,1)
+MOD13Q1.map <- basemap +
   geom_sf(fill = NA) +
-  geom_raster(data = MOD11A2.df, aes(x, y, fill = LST)) +
+  geom_raster(data = MOD13Q1.df, aes(x, y, fill = VI)) +
   theme_bw()+
   theme(text = element_text(size = 24),legend.key.width=unit(1,"cm"),legend.key.height=unit(3,"cm"))+
   scale_fill_viridis_c(breaks=bp2,labels=bp2,option = "viridis", trans = scales::pseudo_log_trans(sigma=5,base=2),
-                       name="kelvin",limits=c(260,300),oob = scales::squish)+
+                       name="VI",limits=c(-0.3,1),oob = scales::squish)+
   xlab(NULL) + ylab(NULL)
 
 
-tstr=paste0("data/MOD11A2.wgs84.ras.01L_Kansai.xdr")
-save(MOD11A2.wgs84.ras.01L,file=tstr) # annual NPP list for years (2012,2016,2020)
+tstr=paste0("data/MOD13Q1.wgs84.ras.01L_Kansai_temp241021.xdr")
+save(MOD13Q1.wgs84.ras.01L,file=tstr) # annual NPP list for years (2012,2016,2020)
 
-adm.bnd.prf.Kansai.MOD11A2.wgs84.simpl2.ras=fasterize(tm2,MOD11A2.wgs84.ras.01L[[1]][[1]],field="flg",fun="first")
-adm.bnd.prf.Kansai.MOD11A2.wgs84.simpl2.ras[adm.bnd.prf.Kansai.MOD11A2.wgs84.simpl2.ras==0]=NA
-
-
+adm.bnd.prf.Kansai.MOD13Q1.wgs84.simpl2.ras=fasterize(tm2,MOD13Q1.wgs84.ras.01L[[1]][[1]],field="flg",fun="first")
+adm.bnd.prf.Kansai.MOD13Q1.wgs84.simpl2.ras[adm.bnd.prf.Kansai.MOD13Q1.wgs84.simpl2.ras==0]=NA
 
 # dates[yyv,2]
-for(yyi in 1:length(yyv)){ # yyi=1
-  tras=mask(MOD11A2.wgs84.ras.01L[[1]][[yyi]],adm.bnd.prf.Kansai.MOD11A2.wgs84.simpl2.ras)
-  tstr=paste0("data/tif/MOD11A2.wgs84_Kansai_day_",dates[yyv[yyi],2],".xdr")
+# for(yyi in 1:length(yyv)){ # yyi=1
+for(yyi in 1:7){ # yyi=1
+  tras=mask(MOD13Q1.wgs84.ras.01L[[1]][[yyi]],adm.bnd.prf.Kansai.MOD13Q1.wgs84.simpl2.ras)
+  tstr=paste0("data/tif/MOD13Q1.wgs84_Kansai_NDVI_",dates[yyv[yyi],2],".xdr")
+  writeRaster(tras,filename=tstr, format="GTiff", overwrite=TRUE)
+  tras=mask(MOD13Q1.wgs84.ras.01L[[2]][[yyi]],adm.bnd.prf.Kansai.MOD13Q1.wgs84.simpl2.ras)
+  tstr=paste0("data/tif/MOD13Q1.wgs84_Kansai_EVI_",dates[yyv[yyi],2],".xdr")
   writeRaster(tras,filename=tstr, format="GTiff", overwrite=TRUE)
 }
 
+plot(tras)
 
 #####
 
